@@ -1,11 +1,12 @@
 package com.weg.SistemaBiblioteca.controller;
 
+import com.weg.SistemaBiblioteca.dto.usuarioDto.UsuarioRequisicaoDto;
+import com.weg.SistemaBiblioteca.dto.usuarioDto.UsuarioRespostaDto;
 import com.weg.SistemaBiblioteca.model.Usuario;
 import com.weg.SistemaBiblioteca.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,29 +19,27 @@ public class UsuarioController {
     }
 
     @PostMapping("/usuarios")
-    public Usuario cadastroUsuario(@RequestBody Usuario usuario) {
+    public UsuarioRespostaDto cadastroUsuario(@RequestBody UsuarioRequisicaoDto usuarioRequisicaoDto) {
 
         try {
-            return usuario = usuarioService.cadastroUsuario(usuario);
+            return usuarioService.cadastroUsuario(usuarioRequisicaoDto);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @GetMapping("/usuarios")
-    public List<Usuario> listarUsuarios() {
-
-        List<Usuario> usuarios = new ArrayList<>();
+    public List<UsuarioRespostaDto> listarUsuarios() {
 
         try {
-            return usuarios = usuarioService.listarUsuarios();
+            return usuarioService.listarUsuarios();
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @GetMapping("/usuarios/{id}")
-    public Usuario buscarPorId(@PathVariable long id) {
+    public UsuarioRespostaDto buscarPorId(@PathVariable long id) {
 
         try {
             return usuarioService.buscaPorId(id);
@@ -50,10 +49,10 @@ public class UsuarioController {
     }
 
     @PutMapping("/usuarios/{id}")
-    public Usuario atualizaUsuario(@PathVariable long id, @RequestBody Usuario usuario) {
+    public UsuarioRespostaDto atualizaUsuario(@PathVariable long id, @RequestBody UsuarioRequisicaoDto usuarioRequisicaoDto) {
 
         try {
-            return usuarioService.atualizaUsuario(usuario,id);
+            return usuarioService.atualizaUsuario(usuarioRequisicaoDto,id);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }

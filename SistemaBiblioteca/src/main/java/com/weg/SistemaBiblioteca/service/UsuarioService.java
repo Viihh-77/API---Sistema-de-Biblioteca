@@ -1,5 +1,8 @@
 package com.weg.SistemaBiblioteca.service;
 
+import com.weg.SistemaBiblioteca.dto.usuarioDto.UsuarioRequisicaoDto;
+import com.weg.SistemaBiblioteca.dto.usuarioDto.UsuarioRespostaDto;
+import com.weg.SistemaBiblioteca.mapper.usuarioMapper.UsuarioMapper;
 import com.weg.SistemaBiblioteca.model.Usuario;
 import com.weg.SistemaBiblioteca.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
@@ -11,28 +14,33 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioMapper usuarioMapper;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
         this.usuarioRepository = usuarioRepository;
+        this.usuarioMapper = usuarioMapper;
     }
 
-    public Usuario cadastroUsuario(Usuario usuario) throws SQLException {
-        return usuarioRepository.cadastroUsuario(usuario);
+    public UsuarioRespostaDto cadastroUsuario(UsuarioRequisicaoDto usuarioRequisicaoDto) throws SQLException {
+        Usuario usuario = usuarioMapper.paraEntidade(usuarioRequisicaoDto);
+        return usuarioMapper.paraRespostaDto(usuarioRepository.cadastroUsuario(usuario));
     }
 
-    public List<Usuario> listarUsuarios() throws SQLException {
-        return usuarioRepository.listarUsuarios();
+    public List<UsuarioRespostaDto> listarUsuarios() throws SQLException {
+        List<Usuario> usuarios = usuarioRepository.listarUsuarios();
+        return usuarioMapper.paraListaRespostaDto(usuarios);
     }
 
-    public Usuario buscaPorId(long id) throws SQLException {
-        return usuarioRepository.buscaPorId(id);
+    public UsuarioRespostaDto buscaPorId(long id) throws SQLException {
+        Usuario usuario = usuarioRepository.buscaPorId(id);
+        return usuarioMapper.paraRespostaDto(usuario);
     }
 
-    public Usuario atualizaUsuario(Usuario usuario, long id) throws SQLException {
+    public UsuarioRespostaDto atualizaUsuario(UsuarioRequisicaoDto usuarioRequisicaoDto, long id) throws SQLException {
+        Usuario usuario = usuarioMapper.paraEntidade(usuarioRequisicaoDto);
         usuario.setId(id);
         usuarioRepository.atualizaUsuario(usuario);
-
-        return usuario;
+        return usuarioMapper.paraRespostaDto(usuario);
     }
 
     public boolean deletaUsuario(long id) throws SQLException {
