@@ -116,7 +116,7 @@ public class EmprestimoRepository {
         return null;
     }
 
-    public void atualizarEmprestimo(Emprestimo emprestimo, Long id) throws SQLException {
+    public void atualizarEmprestimo(Emprestimo emprestimo) throws SQLException {
 
         String query = """
                 UPDATE emprestimo
@@ -131,7 +131,7 @@ public class EmprestimoRepository {
             stmt.setLong(2, emprestimo.getUsuarioId());
             stmt.setDate(3, Date.valueOf(emprestimo.getDataEmprestimo()));
             stmt.setDate(4, Date.valueOf(emprestimo.getDataDevolucao()));
-            stmt.setLong(5, id);
+            stmt.setLong(5, emprestimo.getId());
             stmt.executeUpdate();
         }
     }

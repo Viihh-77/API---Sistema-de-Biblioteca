@@ -1,10 +1,13 @@
 package com.weg.SistemaBiblioteca.controller;
 
+import com.weg.SistemaBiblioteca.dto.emprestimoDto.EmprestimoRequisicaoDto;
+import com.weg.SistemaBiblioteca.dto.emprestimoDto.EmprestimoRespostaDto;
 import com.weg.SistemaBiblioteca.model.Emprestimo;
 import com.weg.SistemaBiblioteca.service.EmprestimoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,17 +22,18 @@ public class EmprestimoController {
     }
 
     @PostMapping("/emprestimos")
-    public Emprestimo registroEmprestimo(@RequestBody Emprestimo emprestimo) {
+    public EmprestimoRespostaDto registroEmprestimo(@RequestBody EmprestimoRequisicaoDto emprestimoRequisicaoDto) {
 
         try {
-            return emprestimo = emprestimoService.registroEmprestimo(emprestimo);
+            return emprestimoService.registroEmprestimo(emprestimoRequisicaoDto);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @GetMapping("/emprestimos")
-    public List<Emprestimo> listarEmprestimos() {
+    public List<EmprestimoRespostaDto> listarEmprestimos() {
+        List<Emprestimo> emprestimos = new ArrayList<>();
 
         try {
             return emprestimoService.listarEmprestimos();
@@ -39,7 +43,7 @@ public class EmprestimoController {
     }
 
     @GetMapping("/emprestimos/{id}")
-    public Emprestimo buscaPorId(@PathVariable Long id) {
+    public EmprestimoRespostaDto buscaPorId(@PathVariable Long id) {
 
         try {
             return emprestimoService.buscaPorId(id);
@@ -49,10 +53,10 @@ public class EmprestimoController {
     }
 
     @PutMapping("/emprestimos/{id}")
-    public Emprestimo atualizarEmprestimo(@RequestBody Emprestimo emprestimo, @PathVariable Long id) {
+    public EmprestimoRespostaDto atualizarEmprestimo(@RequestBody EmprestimoRequisicaoDto emprestimoRequisicaoDto, @PathVariable Long id) {
 
         try {
-            return emprestimoService.atualizarEmprestimo(emprestimo, id);
+            return emprestimoService.atualizarEmprestimo(emprestimoRequisicaoDto, id);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -69,7 +73,7 @@ public class EmprestimoController {
     }
 
     @PutMapping("/emprestimos/{id}/devolucao")
-    public Emprestimo registrarDevolucao(@PathVariable Long id) {
+    public EmprestimoRespostaDto registrarDevolucao(@PathVariable Long id) {
 
         try {
             return emprestimoService.registrarDevolucao(id);
@@ -79,7 +83,9 @@ public class EmprestimoController {
     }
 
     @GetMapping("/usuarios/{id}/emprestimos")
-    public List<Emprestimo> listarPorUsuario(@PathVariable Long id) {
+    public List<EmprestimoRespostaDto> listarPorUsuario(@PathVariable Long id) {
+
+        List<Emprestimo> emprestimos = new ArrayList<>();
 
         try {
             return emprestimoService.listarEmprestimosPorUsuario(id);
@@ -87,5 +93,4 @@ public class EmprestimoController {
             throw new RuntimeException(e.getMessage());
         }
     }
-
 }
