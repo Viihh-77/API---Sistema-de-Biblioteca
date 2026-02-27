@@ -61,6 +61,10 @@ public class EmprestimoService {
             throw new RuntimeException("Empréstimo não encontrado");
         }
 
+        if (emprestimo.getDataDevolucao() != null) {
+            throw new RuntimeException("Este livro já foi devolvido!");
+        }
+
         java.sql.Date hoje = java.sql.Date.valueOf(java.time.LocalDate.now());
         emprestimoRepository.registrarDevolucao(id, hoje);
         emprestimo.setDataDevolucao(java.time.LocalDate.now());

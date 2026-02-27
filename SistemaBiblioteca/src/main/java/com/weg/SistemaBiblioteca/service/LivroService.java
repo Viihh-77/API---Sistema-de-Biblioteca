@@ -5,6 +5,7 @@ import com.weg.SistemaBiblioteca.dto.livroDto.LivroRespostaDto;
 import com.weg.SistemaBiblioteca.mapper.livroMapper.LivroMapper;
 import com.weg.SistemaBiblioteca.mapper.usuarioMapper.UsuarioMapper;
 import com.weg.SistemaBiblioteca.model.Livro;
+import com.weg.SistemaBiblioteca.repository.EmprestimoRepository;
 import com.weg.SistemaBiblioteca.repository.LivroRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,11 @@ import java.util.List;
 @Service
 public class LivroService {
     private final LivroRepository livroRepository;
+    private final EmprestimoRepository emprestimoRepository;
     private final LivroMapper livroMapper;
-    public LivroService(LivroRepository livroRepository, LivroMapper livroMapper) {
+    public LivroService(LivroRepository livroRepository, EmprestimoRepository emprestimoRepository, LivroMapper livroMapper) {
         this.livroRepository = livroRepository;
+        this.emprestimoRepository = emprestimoRepository;
         this.livroMapper = livroMapper;
     }
 
@@ -43,6 +46,12 @@ public class LivroService {
     }
 
     public boolean deletaLivro(int id) throws SQLException {
+        boolean possuiEmprestimoAtivo = emprestimoRepository.livroJaEmprestado((long)id);
+
+        if (possuiEmprestimoAtivo) {
+            throw new RuntimeException("Não é possível excluir livro com empréstimo ativo!");
+        }
+
         return livroRepository.deletaLivro(id);
     }
 }
